@@ -18,7 +18,7 @@ int main() {
 	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
 	
 	*/
-	int a = 2;	
+	int a = 22;	
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
