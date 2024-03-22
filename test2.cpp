@@ -11,7 +11,7 @@ vector <int> dpvec;
 
 int main() {
 
-	int a = 11;	
+	int a = 772;	
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
