@@ -15,7 +15,7 @@ int main() {
     git config --global user.email "본인이메일주소"
 	https://github.com/Stichting-MINIX-Research-Foundation/minix/minix/fs  xx
   	git clone https://Stichting-MINIX-Research-Foundation@github.com/minix/minix/fs.git
-	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
+
 	
 	*/
 	int a = 22;	
