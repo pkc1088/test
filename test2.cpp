@@ -10,14 +10,7 @@ vector <int> vec;
 vector <int> dpvec;
 
 int main() {
-	/*
-	git config --global user.name "본인계정이름"
-    git config --global user.email "본인이메일주소"
-	https://github.com/Stichting-MINIX-Research-Foundation/minix/minix/fs  xx
-  	git clone https://Stichting-MINIX-Research-Foundation@github.com/minix/minix/fs.git
 
-	
-	*/
 	int a = 22;	
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
