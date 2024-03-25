@@ -1,23 +1,27 @@
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
 
- 
-int main(void) {
+int main() {
+    char *logedUsr[3] = {NULL}; // 포인터 배열 선언
+	char sample[40] = "sample data";
 
-	double num = 123.456;
-	int i = 0;
-	double f = 0;
+	logedUsr[0] = sample;
 
-	i = (int) num;
-	f = num - i;
+	printf("%s\n", logedUsr[0]);
+/*
+    logedUsr[1] = (char *)malloc(sizeof(int) * 10); 
+    if (logedUsr[1] == NULL) {
+        fprintf(stderr, "메모리 할당 오류\n");
+        exit(1);
+    }
+    
+    strcpy(logedUsr[1], "Hellowwwwwwwwww");
+    printf("logedUsr[1]: %s\n", logedUsr[1]);
+*/
+    free(logedUsr[1]);
 
-	printf("정수부 : %d\t", i);
-	printf("소수부 : %f \n", f);
-
-	return 0;
+    return 0;
 }
 
 
