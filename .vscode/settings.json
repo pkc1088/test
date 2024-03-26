@@ -65,6 +65,6 @@
         "map": "cpp",
         "set": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

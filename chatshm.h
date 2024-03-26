@@ -6,7 +6,6 @@ typedef struct chatInfo{
     long messageTime;
     char message[40];
     int read_flag;
-    int registered;
 } CHAT_INFO;
 
 #endif//__CHAT_SHARE_MEMORY_H__

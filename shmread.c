@@ -15,32 +15,23 @@ int main()
 	int shmbufindex, readmsgcount;
 	CHAT_INFO *chatInfo= NULL;
 	void *shmaddr = (void *)0;
-	shmid = shmget((key_t)3836, sizeof(CHAT_INFO), 
-                        0666|IPC_CREAT|IPC_EXCL);
+	shmid = shmget((key_t)3836, sizeof(CHAT_INFO), 0666|IPC_CREAT|IPC_EXCL);
 	if (shmid < 0)
 	{
 	    shmid = shmget((key_t)3836, sizeof(CHAT_INFO), 0666);
 	    shmaddr = shmat(shmid, (void *)0, 0666);
-        if (shmaddr < 0)
+        if (shmaddr == NULL)
 	    {
 		    perror("shmat attach is failed : ");
 		    exit(0);
 	    }
     }
+    
     shmaddr = shmat(shmid, (void *)0, 0666);
 	chatInfo = (CHAT_INFO *)shmaddr;
     shmbufindex = 0;
     readmsgcount = 0; 
     
-    //
-    //strucArray[3];
-    CHAT_INFO* strucArray[3] = {0, };
-    for(int i = 0; i < 3; i++) 
-    {
-        strucArray[i] = (CHAT_INFO *)malloc(sizeof(CHAT_INFO)); 
-    }
-    char messageArray[10];
-    //
     initscr();
     noecho();
     cbreak();
@@ -65,62 +56,124 @@ int main()
     mvwprintw(subwin2, 1, 1, "Loged in Users\n");
     mvwprintw(subwin3, 1, 1, "input line\n");
     mvwprintw(subwin4, 1, 1, "Chat Info\n");
-    wprintw(subwin4, "%s", "  unlucky kakaotalk");
+    mvwprintw(subwin4, 5, 5, "%s", "  unlucky kakaotalk");
+
+    int logedUsrNum = 0, messageCnt = 0, msgfull = 0;
+    char currentMsg[40];
+    char *messageArray[10] = {0, }, *usrlist[3] = {0, };
+    
+    for(int i = 0; i < 10; i++) 
+        messageArray[i] = (char *)malloc(sizeof(char) * 100);
+    for(int i = 0; i < 3; i++) 
+        usrlist[i] = (char *)malloc(sizeof(char) * 20);
 
 
-    char *logedUsr[3] = {NULL};
-    int logedUsrNum = 0;
-
-/*
-
-            CHAT_INFO에 대해 구조체 배열을 만들어야 됨!
-            = chatinfo임 / strucArray
-            -> 그 배열에서 usrID를 subwin2에 출력해야함
-*/
-
-	while(1)
+    while(1)
 	{   
+        /** for SUBWIN 3 **/ 
         wclear(subwin3);
         mvwprintw(subwin3, 1, 1, "input line\n");
         box(subwin3, 0, 0);
         mvwprintw(subwin3, 5, 5, "%s", chatInfo->message);
-        
-        if (chatInfo->registered == 0) {
-            logedUsr[logedUsrNum++] = chatInfo->userID;
-            //이게 아니라 chatinfo에서 registered 값 확인 해서 반영
-            //strucArray
-            chatInfo->registered = 1;
+        wrefresh(subwin3);
+
+
+        if (1) 
+        {
+            if(logedUsrNum > 3) {printf("too many users\n"); exit(0);}
+            //chatInfo->registered = 1;
+
+            /** for SUBWIN 2 **/   
+            wclear(subwin2);
+            box(subwin2, 0, 0);
+            mvwprintw(subwin2, 1, 1, "Loged in Users\n");
+
+            int found = 0;
+            for (int i = 0; i < 3; i++) 
+            {
+                if (strcmp(usrlist[i], chatInfo->userID) == 0) // 이미 등록
+                {   
+                    found = 1;
+                    break;
+                }
+            }
+            
+            if(!found) strcpy(usrlist[logedUsrNum++], chatInfo->userID);
+            else goto jump;
+
+            for(int i = 0, h = 5; i < 3; i++, h++) 
+            {
+                if(usrlist[i] == NULL) break;
+                mvwprintw(subwin2, h, 5, "%s\n", usrlist[i]);
+            }
+            wrefresh(subwin2);
         }
-        
+        jump:
+        /*
+        if (chatInfo->registered == 0) 
+        {
+            strcpy(usrlist[logedUsrNum++], chatInfo->userID);
+            if(logedUsrNum == 3) {printf("too many users\n"); exit(0);}
+            chatInfo->registered = 1;
+
+            // for SUBWIN 2   
+            wclear(subwin2);
+            box(subwin2, 0, 0);
+            mvwprintw(subwin2, 1, 1, "Loged in Users\n");
+
+            for(int i = 0, h = 5; i < 3; i++, h++) 
+            {
+                if(usrlist[i] == NULL) break;
+                mvwprintw(subwin2, h, 5, "%s\n", usrlist[i]);
+            }
+            wrefresh(subwin2);
+        }
+        */
+
         if (chatInfo->read_flag == 1)
         {   
-            //messageArray에 메세지 저장 훟 subwin1에 출력
-	        wprintw(subwin1, "   [%s]%ld: %s\n", 
-            chatInfo->userID,
-            chatInfo->messageTime, 
-            chatInfo->message);
-            
-            wrefresh(subwin1);
-            wrefresh(subwin2);
-            wrefresh(subwin3);
-            wrefresh(subwin4);
+	        /*
+            snprintf(NewStr, sizeof(NewStr), "   [%s]%ld: %s\n", chatInfo->userID, chatInfo->messageTime, chatInfo->message); 
+            mvwscanw(subwin1,0,0,NewStr);
+            for( i=0; i<nheight-1; i++ )
+                strcpy(ChatStr[i],ChatStr[i+1]);
+            strcpy(ChatStr[nheight-1],NewStr);
+            for( i=0; i<nheight-1; i++ )
+            mvwprintw(subwin1,i+1,1,ChatStr[i]);
+            */
+            if(msgfull == 0 && messageCnt < 9) messageCnt++;
+            else {msgfull = 1; messageCnt = 9;}
+
+            if(msgfull == 0)
+                snprintf(messageArray[messageCnt], sizeof(char *) * 100, 
+                        "   [%s]%ld: %s\n", chatInfo->userID, 
+                        chatInfo->messageTime, chatInfo->message); 
+
+            if(msgfull == 1)
+            {
+                for(int i = 0; i < 9; i++) 
+                    strcpy(messageArray[i], messageArray[i + 1]);
+                    
+                snprintf(messageArray[9], sizeof(char *) * 100, 
+                        "   [%s]%ld: %s\n", chatInfo->userID, 
+                        chatInfo->messageTime, chatInfo->message); 
+            } 
+
+            wclear(subwin1);
+            box(subwin1, 0, 0);
+            mvwprintw(subwin1, 1, 1, "Chatting..\n");
+            for(int i = 0, h = 2; i < 10; i++, h++)
+            {
+                if(messageArray[i]==NULL) break;
+                mvwprintw(subwin1, h, 1, "%s\n", messageArray[i]);
+                wrefresh(subwin1);
+            }
+
             chatInfo->read_flag = 0;
         }
-        
-        wclear(subwin2);
-        box(subwin2, 0, 0);
-        mvwprintw(subwin2, 1, 1, "Loged in Users\n");
-        
-        for(int i = 0; i < 3; i ++) 
-        {
-            //if(logedUsr[i] == NULL) break;
-            wprintw(subwin2, "%s\n", logedUsr[i]);
-            //이게 아니라 chatinfo에서 registered 값 확인 해서 반영
 
-
-        }
-        
-
+        wrefresh(subwin4);
+                
         if (!strcmp(chatInfo->message, "/exit\n")) 
         {
             printf("%s is out\n", chatInfo->userID);
@@ -128,5 +181,4 @@ int main()
         }
 	    sleep(1);
 	}
-    
 }

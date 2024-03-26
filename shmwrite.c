@@ -18,13 +18,16 @@ int main(int argc, char* argv[])
  
 	CHAT_INFO *chatinfo= NULL;
 	void *shmaddr = (void *)0;
+    
     if (argc < 2) {
         fprintf(stderr, "[Usage]: ./shmwrite UserID \n");
         exit(0);
     }
+    
     strcpy(userID, argv[1]);   
     shmid = shmget((key_t)3836, sizeof(CHAT_INFO),
                                 0666|IPC_CREAT|IPC_EXCL);
+    
     if (shmid < 0)
     {   
         shmid = shmget((key_t)3836, sizeof(CHAT_INFO),0666); 
@@ -50,5 +53,8 @@ int main(int argc, char* argv[])
         strcpy(chatinfo->userID, userID);
         chatinfo->messageTime++;
         strcpy(chatinfo->message, inputstr);  
+
+        //
+        //chatinfo->registered = 0;
 	}
 }
