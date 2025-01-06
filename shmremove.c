@@ -11,7 +11,7 @@ int main()
 	int shmid;
 
 	// 공유메모리 공간 만듦
-	shmid = shmget((key_t)3836, sizeof(CHAT_INFO), 0666);
+	shmid = shmget((key_t)3936, sizeof(CHAT_INFO), 0666);
 
 	if (shmid == -1)
 	{
