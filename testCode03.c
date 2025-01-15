@@ -64,7 +64,7 @@ void RCC_Configure(void) {
    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); 
    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 }
-
+// temp message
 void GPIO_Configure(void) {
 
     GPIO_InitTypeDef GPIO_InitStructure; 
